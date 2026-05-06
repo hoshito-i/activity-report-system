@@ -60,6 +60,9 @@ function ActivityPageContent() {
       } = await supabase.auth.getUser()
       if (!user) return
 
+      const now = new Date()
+      const jstTime = new Date(now.getTime() + 9 * 60 * 60 * 1000)
+
       const { data, error: insertError } = await supabase
         .from('activity_records')
         .insert([
@@ -67,17 +70,24 @@ function ActivityPageContent() {
             deal_id: dealId,
             user_id: user.id,
             activity_text: activityText.trim(),
+            created_at: jstTime.toISOString(),
           },
         ])
         .select()
 
       if (insertError) throw insertError
 
+      if (!data || data.length === 0) {
+        throw new Error('レコードが作成されませんでした')
+      }
+
       const recordId = data[0].id
 
       router.push(`/result?recordId=${recordId}`)
     } catch (err) {
-      alert('送信に失敗しました: ' + (err instanceof Error ? err.message : ''))
+      const errMsg = err instanceof Error ? err.message : String(err)
+      console.error('送信エラー:', err)
+      alert('送信に失敗しました: ' + errMsg)
     } finally {
       setSubmitting(false)
     }

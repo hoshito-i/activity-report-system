@@ -163,7 +163,6 @@ function ActivityRecordsContent() {
                 >
                   <p className="text-sm text-gray-500 mb-4">
                     {new Date(record.created_at).toLocaleString('ja-JP', {
-                      timeZone: 'Asia/Tokyo',
                       year: 'numeric',
                       month: '2-digit',
                       day: '2-digit',
