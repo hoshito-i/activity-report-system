@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' })
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' })
 
     const prompt = `営業活動内容から、以下の3つを日本語で分析してください。各項目は箇条書きで、簡潔に記載してください。
 
