@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
@@ -12,7 +12,7 @@ interface ActivityRecord {
   activity_text: string
 }
 
-export default function ResultPage() {
+function ResultPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const recordId = searchParams.get('recordId')
@@ -166,5 +166,13 @@ export default function ResultPage() {
         </div>
       </main>
     </div>
+  )
+}
+
+export default function ResultPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><p>読み込み中...</p></div>}>
+      <ResultPageContent />
+    </Suspense>
   )
 }

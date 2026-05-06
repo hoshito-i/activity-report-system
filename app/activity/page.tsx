@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
@@ -11,7 +11,7 @@ interface Deal {
   amount: number
 }
 
-export default function ActivityPage() {
+function ActivityPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const dealId = searchParams.get('dealId')
@@ -189,5 +189,13 @@ export default function ActivityPage() {
         </div>
       </main>
     </div>
+  )
+}
+
+export default function ActivityPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><p>読み込み中...</p></div>}>
+      <ActivityPageContent />
+    </Suspense>
   )
 }
