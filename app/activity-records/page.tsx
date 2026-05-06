@@ -28,6 +28,7 @@ function ActivityRecordsContent() {
   const [deal, setDeal] = useState<Deal | null>(null)
   const [records, setRecords] = useState<ActivityRecord[]>([])
   const [loading, setLoading] = useState(true)
+  const [updatingStage, setUpdatingStage] = useState(false)
 
   useEffect(() => {
     if (!dealId) {
@@ -64,6 +65,24 @@ function ActivityRecordsContent() {
     }
   }
 
+  const handleStageUpdate = async (newStage: string) => {
+    if (!deal) return
+    setUpdatingStage(true)
+    try {
+      const { error } = await supabase
+        .from('deals')
+        .update({ stage: newStage })
+        .eq('id', dealId)
+
+      if (error) throw error
+      setDeal({ ...deal, stage: newStage })
+    } catch (err) {
+      alert('ステージ更新に失敗しました')
+    } finally {
+      setUpdatingStage(false)
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -93,6 +112,34 @@ function ActivityRecordsContent() {
 
       <main className="max-w-6xl mx-auto p-6">
         <div className="bg-white rounded-lg shadow p-6">
+          {deal && (
+            <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h2 className="font-semibold text-lg">{deal.title}</h2>
+                  <p className="text-sm text-gray-600 mt-1">
+                    金額: {deal.amount}万円
+                  </p>
+                </div>
+                <div className="flex flex-col items-end gap-2">
+                  <label className="text-sm font-medium">ステージ更新</label>
+                  <select
+                    value={deal.stage}
+                    onChange={(e) => handleStageUpdate(e.target.value)}
+                    disabled={updatingStage}
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                  >
+                    <option>初回提案</option>
+                    <option>2回目以降提案</option>
+                    <option>クロージング</option>
+                    <option>契約書確認</option>
+                    <option>受注</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="mb-6">
             <button
               onClick={() => router.push(`/activity?dealId=${dealId}`)}
