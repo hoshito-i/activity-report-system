@@ -14,14 +14,49 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // ダミーレスポンス（デモ用）
-    const dummyResponse = {
-      summary: '本日の活動内容から、重要な課題や見込みが確認できました。顧客の状況を把握し、次のステップに向けた準備が必要です。',
-      issues: '• 顧客の予算承認プロセスが不明確\n• システム導入のタイムラインが未定\n• キーパーソンの合意が必須',
-      nextAction: '• 詳細な提案資料を作成\n• 次回ミーティングの日程を調整\n• 予算・導入スケジュールの確認',
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+
+    const prompt = `営業活動内容から、以下の3つを日本語で分析してください。各項目は箇条書きで、簡潔に記載してください。
+
+【営業活動内容】
+${activityText}
+
+【出力形式】
+以下のJSON形式で返してください：
+{
+  "summary": "活動内容の要約（2-3文）",
+  "issues": "課題や懸念点（箇条書き）",
+  "nextAction": "推奨されるネクストアクション（箇条書き）"
+}
+
+注意：JSONのみを返してください。説明は不要です。`
+
+    const result = await model.generateContent(prompt)
+    const responseText = result.response.text()
+
+    // JSONパースを試みる
+    let parsedResponse
+    try {
+      // マークダウンのコードブロック削除
+      const jsonStr = responseText
+        .replace(/```json\n?/g, '')
+        .replace(/```\n?/g, '')
+        .trim()
+      parsedResponse = JSON.parse(jsonStr)
+    } catch {
+      // パース失敗時は構造化
+      parsedResponse = {
+        summary: responseText.split('\n')[0] || responseText,
+        issues: '分析中にエラーが発生しました',
+        nextAction: 'もう一度試してください',
+      }
     }
 
-    return NextResponse.json(dummyResponse)
+    return NextResponse.json({
+      summary: parsedResponse.summary || '',
+      issues: parsedResponse.issues || '',
+      nextAction: parsedResponse.nextAction || '',
+    })
   } catch (error) {
     console.error('API error:', error)
     return NextResponse.json(
