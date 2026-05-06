@@ -3,8 +3,6 @@
 import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import { format } from 'date-fns'
-import { ja } from 'date-fns/locale'
 
 interface Deal {
   id: string
@@ -117,7 +115,14 @@ function ActivityRecordsContent() {
                   onClick={() => router.push(`/result?recordId=${record.id}`)}
                 >
                   <p className="text-sm text-gray-500 mb-4">
-                    {format(new Date(record.created_at), 'yyyy年MM月dd日 HH:mm')}
+                    {new Date(record.created_at).toLocaleString('ja-JP', {
+                      timeZone: 'Asia/Tokyo',
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
                   </p>
 
                   <div className="grid grid-cols-3 gap-3 text-sm">
