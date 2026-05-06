@@ -62,7 +62,7 @@ export default function DealsPage() {
   }, [search, deals])
 
   const handleSelectDeal = (deal: Deal) => {
-    router.push(`/activity?dealId=${deal.id}`)
+    router.push(`/activity-records?dealId=${deal.id}`)
   }
 
   const handleAddNewDeal = async () => {
