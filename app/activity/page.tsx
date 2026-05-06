@@ -18,7 +18,6 @@ function ActivityPageContent() {
 
   const [deal, setDeal] = useState<Deal | null>(null)
   const [activityText, setActivityText] = useState('')
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null)
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
 
@@ -45,13 +44,6 @@ function ActivityPageContent() {
       router.push('/deals')
     } finally {
       setLoading(false)
-    }
-  }
-
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      setUploadedFile(file)
     }
   }
 
@@ -136,38 +128,6 @@ function ActivityPageContent() {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 rows={6}
               />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                ファイルをアップロード（オプション）
-              </label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                <input
-                  type="file"
-                  onChange={handleFileUpload}
-                  accept=".txt,.pdf,.docx"
-                  className="hidden"
-                  id="fileInput"
-                />
-                <label
-                  htmlFor="fileInput"
-                  className="cursor-pointer block"
-                >
-                  <p className="text-gray-600">
-                    ファイルを選択または
-                    <span className="text-blue-600"> ドラッグ&ドロップ</span>
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    対応形式: .txt, .pdf, .docx
-                  </p>
-                </label>
-                {uploadedFile && (
-                  <p className="mt-2 text-green-600 text-sm">
-                    ✓ {uploadedFile.name}
-                  </p>
-                )}
-              </div>
             </div>
 
             <div className="flex gap-2">
