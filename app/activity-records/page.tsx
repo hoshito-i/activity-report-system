@@ -116,21 +116,12 @@ function ActivityRecordsContent() {
                   className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 cursor-pointer transition"
                   onClick={() => router.push(`/result?recordId=${record.id}`)}
                 >
-                  <div className="flex justify-between items-start mb-3">
-                    <div className="flex-1">
-                      <p className="text-sm text-gray-500">
-                        {formatDistanceToNow(new Date(record.created_at), {
-                          addSuffix: true,
-                          locale: ja,
-                        })}
-                      </p>
-                      <div className="mt-2 p-3 bg-gray-50 rounded border border-gray-200">
-                        <p className="text-sm text-gray-700 whitespace-pre-wrap">
-                          {record.activity_text}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                  <p className="text-sm text-gray-500 mb-4">
+                    {formatDistanceToNow(new Date(record.created_at), {
+                      addSuffix: true,
+                      locale: ja,
+                    })}
+                  </p>
 
                   <div className="grid grid-cols-3 gap-3 text-sm">
                     <div className="bg-green-50 p-3 rounded border border-green-200">
