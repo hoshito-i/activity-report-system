@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import { formatDistanceToNow } from 'date-fns'
+import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
 
 interface Deal {
@@ -117,10 +117,7 @@ function ActivityRecordsContent() {
                   onClick={() => router.push(`/result?recordId=${record.id}`)}
                 >
                   <p className="text-sm text-gray-500 mb-4">
-                    {formatDistanceToNow(new Date(record.created_at), {
-                      addSuffix: true,
-                      locale: ja,
-                    })}
+                    {format(new Date(record.created_at), 'yyyy年MM月dd日 HH:mm')}
                   </p>
 
                   <div className="grid grid-cols-3 gap-3 text-sm">
